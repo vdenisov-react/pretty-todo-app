@@ -25,8 +25,7 @@ const tasks = (state = TASKS, { type, id, text, isCompleted }) => {
         ...state, {
           id,
           text,
-          isCompleted
-
+          isCompleted,
         }
       ];
     default:

@@ -1,29 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
+import './todo.css';
+
+import { addTask } from '../../actions/actionCreator';
+
 import ToDoInput from '../../components/todo-input/todo-input';
 import ToDoList from '../../components/todo-list/todo-list';
 import Footer from '../../components/footer/footer';
-
-import './todo.css';
-
-// const TASKS = [
-//   {
-//     id: 1,
-//     text: 'Learn ReactJS',
-//     isCompleted: true,
-//   },
-//   {
-//     id: 2,
-//     text: 'Learn Redux',
-//     isCompleted: false,
-//   },
-//   {
-//     id: 3,
-//     text: 'Learn React Router',
-//     isCompleted: false,
-//   }
-// ];
 
 class ToDo extends Component {
 
@@ -38,6 +22,20 @@ class ToDo extends Component {
     });
   }
 
+  addTask = ({ key }) => {
+    const { taskText } = this.state;
+
+    if (taskText.length > 3 && key === 'Enter') {
+      const { addTask } = this.props;
+
+      addTask((new Date()).getTime(), taskText, false);
+
+      this.setState({
+        taskText: '',
+      })
+    }
+  }
+
   render() {
     const { activeFilter, taskText } = this.state;
     const { tasks } = this.props;
@@ -45,7 +43,7 @@ class ToDo extends Component {
 
     return (
       <div className="todo-wrapper">
-        <ToDoInput onChange={this.handlerInputChange} value={taskText}/>
+        <ToDoInput onKeyPress={this.addTask} onChange={this.handlerInputChange} value={taskText}/>
         {isTasksExist && <ToDoList tasksList={tasks} />}
         {isTasksExist && <Footer amount={tasks.length} activeFilter={activeFilter} />}
       </div>
@@ -57,4 +55,4 @@ const mapStateToProps = (state) => ({
   tasks: state.tasks
 });
 
-export default connect(mapStateToProps)(ToDo);
+export default connect(mapStateToProps, { addTask })(ToDo);
