@@ -1,13 +1,13 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 
-import './App.css';
+import ToDo from './containers/todo/todo';
+import Title from './components/title/title';
 
-function App() {
-  return (
-    <h1>
-      Hello world !!!
-    </h1>
-  );
-}
+const App = () => (
+  <Fragment>
+    <Title title="ToDo App" />
+    <ToDo />
+  </Fragment>
+);
 
 export default App;
