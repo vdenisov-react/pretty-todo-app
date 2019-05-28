@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import './todo.css';
 
-import { addTask } from '../../actions/actionCreator';
+import { addTask, removeTask } from '../../actions/actionCreator';
 
 import ToDoInput from '../../components/todo-input/todo-input';
 import ToDoList from '../../components/todo-list/todo-list';
@@ -38,13 +38,13 @@ class ToDo extends Component {
 
   render() {
     const { activeFilter, taskText } = this.state;
-    const { tasks } = this.props;
+    const { tasks, removeTask } = this.props;
     const isTasksExist = tasks && tasks.length > 0;
 
     return (
       <div className="todo-wrapper">
         <ToDoInput onKeyPress={this.addTask} onChange={this.handlerInputChange} value={taskText}/>
-        {isTasksExist && <ToDoList tasksList={tasks} />}
+        {isTasksExist && <ToDoList tasksList={tasks} removeTask={removeTask} />}
         {isTasksExist && <Footer amount={tasks.length} activeFilter={activeFilter} />}
       </div>
     );
@@ -55,4 +55,7 @@ const mapStateToProps = (state) => ({
   tasks: state.tasks
 });
 
-export default connect(mapStateToProps, { addTask })(ToDo);
+export default connect(mapStateToProps, {
+  addTask,
+  removeTask,
+})(ToDo);
