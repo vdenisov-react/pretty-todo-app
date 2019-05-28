@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import './todo.css';
 
-import { addTask, removeTask, completeTask } from '../../actions/actionCreator';
+import { addTask, removeTask, completeTask, changeFilter } from '../../actions/actionCreator';
 
 import ToDoInput from '../../components/todo-input/todo-input';
 import ToDoList from '../../components/todo-list/todo-list';
@@ -12,7 +12,6 @@ import Footer from '../../components/footer/footer';
 class ToDo extends Component {
 
   state = {
-    activeFilter: 'all',
     taskText: '',
   }
 
@@ -36,10 +35,27 @@ class ToDo extends Component {
     }
   }
 
+  filterTasks = (tasks, activeFilter) => {
+    switch (activeFilter) {
+      case 'completed':
+        return tasks.filter(task => task.isCompleted);
+        break;
+      case 'active':
+        return tasks.filter(task => !task.isCompleted);
+        break;
+      default:
+        return tasks;
+    }
+  }
+
+  getActiveTasksCounter = tasks => tasks.filter(task => !task.isCompleted).length;
+
   render() {
-    const { activeFilter, taskText } = this.state;
-    const { tasks, removeTask, completeTask } = this.props;
+    const { taskText } = this.state;
+    const { tasks, removeTask, completeTask, filter, changeFilter } = this.props;
     const isTasksExist = tasks && tasks.length > 0;
+    const filteredTasks = this.filterTasks(tasks, filter);
+    const taskCounter = this.getActiveTasksCounter(tasks)
 
     return (
       <div className="todo-wrapper">
@@ -49,25 +65,25 @@ class ToDo extends Component {
           value={taskText}/>
 
         {isTasksExist && <ToDoList
-          tasksList={tasks}
+          tasksList={filteredTasks}
           removeTask={removeTask}
           completeTask={completeTask} />}
 
         {isTasksExist && <Footer
-          amount={tasks.length}
-          activeFilter={activeFilter}
+          amount={taskCounter}
+          activeFilter={filter}
+          changeFilter={changeFilter}
         />}
       </div>
     );
   }
 }
 
-const mapStateToProps = (state) => ({
-  tasks: state.tasks
-});
+const mapStateToProps = ({ tasks, filter }) => ({ tasks, filter });
 
 export default connect(mapStateToProps, {
   addTask,
   removeTask,
   completeTask,
+  changeFilter,
 })(ToDo);
