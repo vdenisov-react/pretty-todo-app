@@ -39,9 +39,11 @@ class ToDo extends Component {
     switch (activeFilter) {
       case 'completed':
         return tasks.filter(task => task.isCompleted);
+        // eslint-disable-next-line no-unreachable
         break;
       case 'active':
         return tasks.filter(task => !task.isCompleted);
+        // eslint-disable-next-line no-unreachable
         break;
       default:
         return tasks;
